@@ -2,6 +2,7 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const path = require('path');
 const request = require('request-promise');
+const dotenv = require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
@@ -17,15 +18,15 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.get('/:city', (req, res) => {
   request({
-    uri: 'http://apidev.accuweather.com/locations/v1/search',
+    uri: 'http://api.openweathermap.org/data/2.5/weather',
     qs: {
-      q: 'req.params.city',
-      apiKey: 'api-key',
+      q: req.params.city,
+      apiKey: process.env.API_KEY
     },
     json: true
   })
     .then((data) => {
-      res.render('index', data)
+      res.render('home', data)
     })
     .catch((err) => {
       console.log(err)
